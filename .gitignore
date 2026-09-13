@@ -1,0 +1,30 @@
+# Excel templates, input files, and generated reports
+*.[xX][lL][sS]
+*.[xX][lL][sS][xX]
+*.[xX][lL][sS][mM]
+*.[xX][lL][sS][bB]
+~$*
+
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Build artifacts and backups
+build/
+dist/
+*.exe
+*.rar
+*.zip
+data/backups/
+*_before_*
+
+# Local editor settings and credentials
+.idea/
+.vscode/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
