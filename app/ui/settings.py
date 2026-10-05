@@ -28,6 +28,7 @@ from app.data import (
 )
 from app.data.json_storage import write_json_with_backup
 from app.services.column_routing import analyze_routing_rules, make_precise_routing_rule
+from app.ui.layout import fit_listbox_rows
 from app.utils.sorting import safe_chinese_sort_key, safe_natural_sort_key
 
 
@@ -79,32 +80,33 @@ class SettingsMixin:
                                      bg="#2b2b2b", fg="white", relief="flat", highlightthickness=0, selectbackground="#1f538d", selectmode="extended")
         self.listbox_db.pack(side="left", fill="both", expand=True)
         scroll_db.configure(command=self.listbox_db.yview)
+        fit_listbox_rows(self.listbox_db, scroll_db)
 
-        ctk.CTkLabel(right_frame, text=" 📝 新增 / 編輯單筆檢驗項目 ", font=self.title_font).pack(pady=(10, 15))
+        ctk.CTkLabel(right_frame, text=" 📝 新增 / 編輯單筆檢驗項目 ", font=self.title_font).pack(pady=(10, 5))
 
         form_frame = ctk.CTkFrame(right_frame, fg_color="transparent")
         form_frame.pack(fill="x", padx=20)
 
         ctk.CTkLabel(form_frame, text="1. 系統代碼 (唯一值，如 002):", font=self.default_font).pack(anchor="w", pady=(5, 0))
         self.entry_db_code = ctk.CTkEntry(form_frame, font=self.default_font, height=35)
-        self.entry_db_code.pack(fill="x", pady=(0, 10))
+        self.entry_db_code.pack(fill="x", pady=(0, 4))
 
         ctk.CTkLabel(form_frame, text="2. 中/英文名稱 (如 大腸癌胚抗原CEA 或 GA):", font=self.default_font).pack(anchor="w", pady=(5, 0))
         self.entry_db_zh = ctk.CTkEntry(form_frame, font=self.default_font, height=35)
-        self.entry_db_zh.pack(fill="x", pady=(0, 10))
+        self.entry_db_zh.pack(fill="x", pady=(0, 4))
 
         ctk.CTkLabel(form_frame, text="3. 英文簡寫 (如 CEA(AU)):", font=self.default_font).pack(anchor="w", pady=(5, 0))
         self.entry_db_en = ctk.CTkEntry(form_frame, font=self.default_font, height=35)
-        self.entry_db_en.pack(fill="x", pady=(0, 10))
+        self.entry_db_en.pack(fill="x", pady=(0, 4))
 
         ctk.CTkLabel(form_frame, text="4. 檢驗類別 (如 血液, 生化 - 可空白):", font=self.default_font).pack(anchor="w", pady=(5, 0))
         self.entry_db_category = ctk.CTkEntry(form_frame, font=self.default_font, height=35)
-        self.entry_db_category.pack(fill="x", pady=(0, 10))
+        self.entry_db_category.pack(fill="x", pady=(0, 4))
 
         ctk.CTkLabel(form_frame, text="5. 歸屬單位:", font=self.default_font).pack(anchor="w", pady=(5, 0))
         self.db_org_var = ctk.StringVar(value="C2")
         org_frame = ctk.CTkFrame(form_frame, fg_color="transparent")
-        org_frame.pack(fill="x", pady=(0, 15))
+        org_frame.pack(fill="x", pady=(0, 5))
         ctk.CTkRadioButton(org_frame, text="C2 (杏聯)", variable=self.db_org_var, value="C2", font=self.default_font).pack(side="left", padx=(0, 15))
         ctk.CTkRadioButton(org_frame, text="B2 (博仁)", variable=self.db_org_var, value="B2", font=self.default_font).pack(side="left")
 
@@ -127,7 +129,7 @@ class SettingsMixin:
         selected_temp_items = []
 
         selector_frame = ctk.CTkFrame(win, fg_color="#1a202c")
-        selector_frame.pack(fill="x", padx=15, pady=(15, 5))
+        selector_frame.pack(fill="x", padx=10, pady=(6, 5))
         
         ctk.CTkLabel(selector_frame, text="📋 快速選擇要管理的院所:", font=(UI_FONT, 14, "bold"), text_color="#61afef").pack(side="left", padx=12, pady=10)
         
@@ -143,7 +145,7 @@ class SettingsMixin:
         inst_selector.pack(side="left", padx=5)
 
         manager_body = ctk.CTkFrame(win, fg_color="transparent")
-        manager_body.pack(fill="both", expand=True, padx=15, pady=(5, 15))
+        manager_body.pack(fill="both", expand=True, padx=10, pady=(0, 6))
 
         top_frame = ctk.CTkFrame(manager_body, fg_color="#2b2b2b")
         top_frame.pack(fill="x", pady=(0, 8))
@@ -220,30 +222,37 @@ class SettingsMixin:
         manager_tab_buttons["routing"].pack(side="left", padx=3, pady=5)
         show_manager_tab("shortcuts")
 
-        r3 = ctk.CTkFrame(routing_tab, fg_color="#3d2a2a", corner_radius=8)
-        r3.pack(fill="both", expand=True, padx=10, pady=10)
+        routing_layout = ctk.CTkFrame(routing_tab, fg_color="transparent")
+        routing_layout.pack(fill="both", expand=True)
+        routing_layout.grid_columnconfigure(0, weight=2, uniform="routing_columns")
+        routing_layout.grid_columnconfigure(1, weight=3, uniform="routing_columns")
+        routing_layout.grid_rowconfigure(0, weight=1)
+        routing_layout.grid_propagate(False)
+
+        r3 = ctk.CTkFrame(routing_layout, fg_color="#3d2a2a", corner_radius=8)
+        r3.grid(row=0, column=0, sticky="nsew", padx=(0, 6))
         ctk.CTkLabel(
-            r3, text="🔄 院所專屬分派規則（建議由下方資料庫精準加入）:",
+            r3, text="🔄 院所專屬分派規則",
             font=(UI_FONT, 13, "bold"), text_color="#ff9999"
         ).pack(anchor="w", padx=10, pady=(10, 5))
 
         force_xing_frame = ctk.CTkFrame(r3, fg_color="transparent")
         force_xing_frame.pack(fill="x", padx=10, pady=2)
-        ctk.CTkLabel(force_xing_frame, text="強制分派至【杏聯】:", font=(UI_FONT, 13)).pack(side="left", padx=5)
+        ctk.CTkLabel(force_xing_frame, text="強制分派至【杏聯】:", font=(UI_FONT, 13)).pack(anchor="w", padx=5)
         force_xing_entry = ctk.CTkEntry(
             force_xing_frame, width=280,
-            placeholder_text="建議由下方查詢加入，例如：系統:105"
+            placeholder_text="由右側選取項目，或輸入系統:105"
         )
-        force_xing_entry.pack(side="left", padx=5)
+        force_xing_entry.pack(fill="x", padx=5)
 
         force_bo_frame = ctk.CTkFrame(r3, fg_color="transparent")
         force_bo_frame.pack(fill="x", padx=10, pady=(2, 10))
-        ctk.CTkLabel(force_bo_frame, text="強制分派至【博仁】:", font=(UI_FONT, 13)).pack(side="left", padx=5)
+        ctk.CTkLabel(force_bo_frame, text="強制分派至【博仁】:", font=(UI_FONT, 13)).pack(anchor="w", padx=5)
         force_bo_entry = ctk.CTkEntry(
             force_bo_frame, width=280,
-            placeholder_text="建議由下方查詢加入，例如：英文:GLU"
+            placeholder_text="由右側選取項目，或輸入英文:GLU"
         )
-        force_bo_entry.pack(side="left", padx=5)
+        force_bo_entry.pack(fill="x", padx=5)
 
         rule_action_row = ctk.CTkFrame(r3, fg_color="transparent")
         rule_action_row.pack(fill="x", padx=10, pady=(0, 10))
@@ -255,7 +264,7 @@ class SettingsMixin:
             fg_color="#805ad5",
             hover_color="#6b46c1",
         )
-        btn_preview_rules.pack(side="left", padx=5)
+        btn_preview_rules.pack(anchor="w", padx=5)
         routing_preview_status = ctk.CTkLabel(
             rule_action_row,
             text="尚未設定分派規則",
@@ -263,7 +272,7 @@ class SettingsMixin:
             text_color="#A0AEC0",
             anchor="w",
         )
-        routing_preview_status.pack(side="left", fill="x", expand=True, padx=8)
+        routing_preview_status.pack(fill="x", padx=5, pady=(4, 0))
 
         def get_routing_catalog_items():
             """由目前資料庫建立去重後的分派規則預覽目錄。"""
@@ -394,20 +403,23 @@ class SettingsMixin:
 
         # 使用者可先以系統代碼、英文簡碼或名稱片段搜尋資料庫，再把選定項目
         # 寫成「系統:xxx」等精準規則，避免自由文字部分比對到不相干的項目。
-        routing_picker = ctk.CTkFrame(r3, fg_color="#29223A", corner_radius=8)
-        routing_picker.pack(fill="both", expand=True, padx=10, pady=(0, 10))
+        routing_picker = ctk.CTkFrame(routing_layout, fg_color="#29223A", corner_radius=8)
+        routing_picker.grid(row=0, column=1, sticky="nsew", padx=(6, 0))
+        # 清單只使用剩餘高度；下方的目標院所按鈕和狀態列必須固定可見。
+        routing_picker.grid_columnconfigure(0, weight=1)
+        routing_picker.grid_rowconfigure(3, weight=1)
         ctk.CTkLabel(
             routing_picker,
-            text="🎯 從資料庫精準加入分派規則（建議使用）",
+            text="🎯 搜尋並加入分派項目",
             font=(UI_FONT, 12, "bold"),
             text_color="#D6BCFA",
-        ).pack(anchor="w", padx=10, pady=(8, 2))
+        ).grid(row=0, column=0, sticky="w", padx=10, pady=(8, 2))
         ctk.CTkLabel(
             routing_picker,
-            text="搜尋系統代碼、英文簡碼或名稱後，選取項目並加入目標院所。",
+            text="輸入代碼或名稱，可多選後加入目標院所。",
             font=(UI_FONT, 11),
             text_color="#A0AEC0",
-        ).pack(anchor="w", padx=10, pady=(0, 4))
+        ).grid(row=1, column=0, sticky="w", padx=10, pady=(0, 4))
 
         routing_search_var = tk.StringVar()
         routing_search_entry = ctk.CTkEntry(
@@ -416,10 +428,10 @@ class SettingsMixin:
             height=28,
             placeholder_text="例如：105、GLU、血糖",
         )
-        routing_search_entry.pack(fill="x", padx=10, pady=(0, 4))
+        routing_search_entry.grid(row=2, column=0, sticky="ew", padx=10, pady=(0, 4))
 
         routing_list_frame = ctk.CTkFrame(routing_picker, fg_color="transparent")
-        routing_list_frame.pack(fill="both", expand=True, padx=10, pady=(0, 4))
+        routing_list_frame.grid(row=3, column=0, sticky="nsew", padx=10, pady=(0, 4))
         routing_scroll = ctk.CTkScrollbar(routing_list_frame)
         routing_scroll.pack(side="right", fill="y")
         routing_listbox = tk.Listbox(
@@ -437,6 +449,7 @@ class SettingsMixin:
         )
         routing_listbox.pack(side="left", fill="both", expand=True)
         routing_scroll.configure(command=routing_listbox.yview)
+        fit_listbox_rows(routing_listbox, routing_scroll)
         routing_picker_items = []
         routing_picker_status = ctk.CTkLabel(
             routing_picker,
@@ -503,7 +516,7 @@ class SettingsMixin:
             )
 
         picker_buttons = ctk.CTkFrame(routing_picker, fg_color="transparent")
-        picker_buttons.pack(fill="x", padx=10, pady=(0, 4))
+        picker_buttons.grid(row=4, column=0, sticky="ew", padx=10, pady=(0, 4))
         ctk.CTkButton(
             picker_buttons,
             text="➕ 加入杏聯",
@@ -520,7 +533,7 @@ class SettingsMixin:
             hover_color="#2C5282",
             command=lambda: append_precise_rules(force_bo_entry, "博仁"),
         ).pack(side="left", fill="x", expand=True, padx=(4, 0))
-        routing_picker_status.pack(fill="x", padx=10, pady=(0, 7))
+        routing_picker_status.grid(row=5, column=0, sticky="ew", padx=10, pady=(0, 7))
         routing_search_var.trace_add("write", refresh_routing_picker)
         refresh_routing_picker()
 
@@ -590,7 +603,7 @@ class SettingsMixin:
                 messagebox.showerror(
                     "無法儲存",
                     f"有 {len(routing_analysis['ambiguous_rules'])} 條自由文字規則會命中多個項目。\n\n"
-                    "請從下方「從資料庫精準加入分派規則」搜尋並加入正確項目後，再儲存。",
+                    "請從右側「搜尋並加入分派項目」選取正確項目後，再儲存。",
                     parent=self.settings_window,
                 )
                 open_routing_preview()
@@ -649,13 +662,15 @@ class SettingsMixin:
         split_container.pack(fill="both", expand=True)
         # 左欄：既有快捷鍵＋第 3 步；右欄：較窄但全高的第 1／2 步。
         # 讓資料庫搜尋清單取得完整高度，同時利用左下方原本閒置的空間。
-        split_container.grid_columnconfigure(0, weight=6, minsize=520)
-        split_container.grid_columnconfigure(1, weight=4, minsize=430)
-        split_container.grid_rowconfigure(0, minsize=170)
-        split_container.grid_rowconfigure(1, weight=1)
+        split_container.grid_columnconfigure(0, weight=6, uniform="shortcut_columns")
+        split_container.grid_columnconfigure(1, weight=5, uniform="shortcut_columns")
+        split_container.grid_rowconfigure(0, weight=1, uniform="shortcut_rows")
+        split_container.grid_rowconfigure(1, weight=1, uniform="shortcut_rows")
+        split_container.grid_propagate(False)
 
         list_frame = ctk.CTkFrame(split_container)
         list_frame.grid(row=0, column=0, sticky="nsew", padx=(0, 8), pady=(0, 6))
+        list_frame.pack_propagate(False)
         
         ctk.CTkLabel(list_frame, text="📌 該院所現有的快捷按鈕:", font=(UI_FONT, 14, "bold")).pack(anchor="w", padx=10, pady=(8, 2))
         
@@ -674,7 +689,8 @@ class SettingsMixin:
         editor_layout = ctk.CTkFrame(add_box, fg_color="transparent")
         editor_layout.pack(fill="both", expand=True, padx=10, pady=8)
         editor_layout.grid_columnconfigure(0, weight=1)
-        editor_layout.grid_rowconfigure(2, weight=1, minsize=150)
+        editor_layout.grid_rowconfigure(2, weight=1)
+        editor_layout.grid_propagate(False)
         
         form_title = ctk.CTkLabel(editor_layout, text="➕ 新增快捷按鈕", font=(UI_FONT, 14, "bold"), text_color="#61afef")
         form_title.grid(row=0, column=0, sticky="w", pady=(0, 3))
@@ -687,7 +703,7 @@ class SettingsMixin:
         
         submit_frame = ctk.CTkFrame(step3_header, fg_color="transparent")
         action_f = ctk.CTkFrame(step3_header, fg_color="transparent")
-        # 以固定高度的外框限制捲動區；避免 CTkScrollableFrame 被可用空間撐大而擠掉功能鍵。
+        # 捲動內容使用左下方剩餘空間，不讓項目數量改變工具列的高度。
         temp_items_viewport = ctk.CTkFrame(step3_box, height=55, fg_color="#1a202c", corner_radius=6)
         temp_items_viewport.pack_propagate(False)
         temp_items_scroll = ctk.CTkScrollableFrame(
@@ -696,7 +712,7 @@ class SettingsMixin:
             fg_color="#1a202c",
             orientation="vertical",
         )
-        lbl_temp_title = ctk.CTkLabel(step3_header, text="3. 已加入的項目清單 (點擊 ✖ 可單獨移除):", font=(UI_FONT, 12))
+        lbl_temp_title = ctk.CTkLabel(step3_header, text="3. 已加入項目（✖ 移除）", font=(UI_FONT, 12))
         
         btn_submit = ctk.CTkButton(submit_frame, text="✓ 建立快捷按鈕", height=30, font=(UI_FONT, 12, "bold"), fg_color="#2b7b5c", hover_color="#1e5c45")
         btn_submit.pack(side="left", fill="x", expand=True)
@@ -753,7 +769,7 @@ class SettingsMixin:
             selected_temp_items.clear()
             render_temp_items()
 
-        ctk.CTkButton(action_f, text="＋ 加入清單", height=30, fg_color="#3182ce", hover_color="#2b6cb0", command=lambda: add_item_to_temp()).pack(side="left", fill="x", expand=True, padx=(0, 4))
+        ctk.CTkButton(action_f, text="＋ 加入清單", width=105, height=30, fg_color="#3182ce", hover_color="#2b6cb0", command=lambda: add_item_to_temp()).pack(side="left", fill="x", expand=True, padx=(0, 4))
         ctk.CTkButton(action_f, text="清空", width=52, height=30, fg_color="#555555", command=clear_temp_items).pack(side="left")
 
         f2 = ctk.CTkFrame(editor_layout, fg_color="transparent")
@@ -761,7 +777,7 @@ class SettingsMixin:
         
         ctk.CTkLabel(
             f2,
-            text="2. 搜尋並選取對應項目（可多選、連按兩下加入、滑鼠滾輪）：",
+            text="2. 搜尋並選取項目（多選／雙擊加入）",
             font=("Microsoft JhengHei UI", 12),
         ).pack(anchor="w", padx=5, pady=(0, 2))
         
@@ -783,13 +799,14 @@ class SettingsMixin:
                                 highlightcolor="#4a5568", exportselection=False)
         listbox_sc.pack(side="left", fill="both", expand=True)
         scroll_sc.configure(command=listbox_sc.yview)
+        fit_listbox_rows(listbox_sc, scroll_sc)
 
         step3_header.pack(fill="x", padx=12, pady=(6, 1))
         step3_header.grid_columnconfigure(1, weight=1)
         lbl_temp_title.grid(row=0, column=0, sticky="w")
         shortcut_feedback.grid(row=0, column=1, sticky="ew", padx=(8, 4))
-        action_f.grid(row=0, column=2, sticky="e", padx=(0, 5))
-        submit_frame.grid(row=0, column=3, sticky="e")
+        action_f.grid(row=1, column=0, sticky="w", pady=(0, 4))
+        submit_frame.grid(row=1, column=1, sticky="e", pady=(0, 4))
 
         temp_items_viewport.pack(fill="both", expand=True, padx=12, pady=(0, 8))
         temp_items_scroll.pack(fill="both", expand=True, padx=1, pady=1)
@@ -1051,8 +1068,7 @@ class SettingsMixin:
         )
         ctk.CTkLabel(
             main_container,
-            text="選擇規則範圍後，從資料庫多選項目並一次套用同一組 K 欄關鍵字。"
-                 "院所規則會優先覆蓋通用規則。",
+            text="多選資料庫項目，共用同一組 K 欄關鍵字；院所規則優先於通用規則。",
             font=(UI_FONT, 13), text_color="#AAAAAA", justify="left",
         ).pack(anchor="w", padx=8, pady=(0, 10))
 
@@ -1203,7 +1219,7 @@ class SettingsMixin:
                 anchor="w", padx=18, pady=(14, 3)
             )
             if code == "__ALL__":
-                hint = "這裡的規則會套用至所有院所，可作為共同的預設；L 欄單項 BC 功能請至個別院所頁面設定。"
+                hint = "套用至所有院所；L 欄功能請至個別院所設定。"
             else:
                 hint = "只會在目前院所代號產生模板時套用；同一項目會覆蓋通用規則。"
             ctk.CTkLabel(page_frame, text=hint, font=(UI_FONT, 12), text_color="#A0AEC0").pack(
@@ -1251,28 +1267,32 @@ class SettingsMixin:
             work_split.pack(fill="both", expand=True, padx=18, pady=(0, 12))
             # 使用固定的等寬格線，不讓文字長度或院所切換改變兩欄比例。
             work_split.grid_rowconfigure(0, weight=1)
-            work_split.grid_columnconfigure(0, weight=1, uniform="special_formula_columns", minsize=360)
-            work_split.grid_columnconfigure(1, weight=1, uniform="special_formula_columns", minsize=360)
+            work_split.grid_columnconfigure(0, weight=1, uniform="special_formula_columns")
+            work_split.grid_columnconfigure(1, weight=1, uniform="special_formula_columns")
+            work_split.grid_propagate(False)
 
             picker_frame = ctk.CTkFrame(work_split, corner_radius=8, fg_color="#29223A")
             picker_frame.grid(row=0, column=0, sticky="nsew", padx=(0, 6))
+            picker_frame.grid_columnconfigure(0, weight=1)
+            picker_frame.grid_rowconfigure(4, weight=1)
 
             rules_panel = ctk.CTkFrame(work_split, corner_radius=8, fg_color="#202A36")
-            # 寬度跟左欄固定一致，但高度依實際展開的群組決定，避免收合後保留大片空白。
-            rules_panel.grid(row=0, column=1, sticky="new", padx=(6, 0))
+            rules_panel.grid(row=0, column=1, sticky="nsew", padx=(6, 0))
+            rules_panel.grid_columnconfigure(0, weight=1)
+            rules_panel.grid_rowconfigure(1, weight=1)
             ctk.CTkLabel(
                 picker_frame,
-                text="🎯 從資料庫多選項目，套用同一組 K 欄關鍵字",
+                text="🎯 選取項目並設定 K 欄關鍵字",
                 font=(UI_FONT, 13, "bold"), text_color="#D6BCFA",
-            ).pack(anchor="w", padx=12, pady=(10, 2))
+            ).grid(row=0, column=0, sticky="w", padx=12, pady=(10, 2))
             ctk.CTkLabel(
                 picker_frame,
-                text="例如選取 CRP、ESR 後輸入「炎」，兩個項目都會共用此 K 欄關鍵字。",
+                text="例如：選取 CRP、ESR，共用關鍵字「炎」。",
                 font=(UI_FONT, 11), text_color="#A0AEC0",
-            ).pack(anchor="w", padx=12, pady=(0, 6))
+            ).grid(row=1, column=0, sticky="w", padx=12, pady=(0, 6))
 
             keyword_row = ctk.CTkFrame(picker_frame, fg_color="transparent")
-            keyword_row.pack(fill="x", padx=12, pady=(0, 5))
+            keyword_row.grid(row=2, column=0, sticky="ew", padx=12, pady=(0, 5))
             ctk.CTkLabel(keyword_row, text="K 欄關鍵字：", font=(UI_FONT, 13)).pack(side="left", padx=(0, 6))
             entry_kw = ctk.CTkEntry(
                 keyword_row, font=(UI_FONT, 13), placeholder_text="例如：炎,傷（逗號分隔）"
@@ -1286,10 +1306,10 @@ class SettingsMixin:
                 height=29,
                 placeholder_text="🔍 搜尋系統代碼、英文簡碼或項目名稱；點一下選取，再點取消",
             )
-            search_entry.pack(fill="x", padx=12, pady=(0, 4))
+            search_entry.grid(row=3, column=0, sticky="ew", padx=12, pady=(0, 4))
 
             candidate_frame = ctk.CTkFrame(picker_frame, fg_color="#1A202C")
-            candidate_frame.pack(fill="both", expand=True, padx=12, pady=(0, 5))
+            candidate_frame.grid(row=4, column=0, sticky="nsew", padx=12, pady=(0, 5))
             candidate_scroll = ctk.CTkScrollbar(candidate_frame)
             candidate_scroll.pack(side="right", fill="y")
             candidate_listbox = tk.Listbox(
@@ -1308,6 +1328,7 @@ class SettingsMixin:
             )
             candidate_listbox.pack(side="left", fill="both", expand=True, padx=5, pady=5)
             candidate_scroll.configure(command=candidate_listbox.yview)
+            fit_listbox_rows(candidate_listbox, candidate_scroll, padx=5, pady=5)
             candidate_items = []
 
             def toggle_candidate_selection(event):
@@ -1332,24 +1353,24 @@ class SettingsMixin:
             candidate_listbox.bind("<Button-1>", toggle_candidate_selection)
 
             picker_actions = ctk.CTkFrame(picker_frame, fg_color="transparent")
-            picker_actions.pack(fill="x", padx=12, pady=(0, 4))
+            picker_actions.grid(row=5, column=0, sticky="ew", padx=12, pady=(0, 6))
             btn_add_selected = ctk.CTkButton(
                 picker_actions,
-                text="➕ 將選取項目綁定至上述 K 欄關鍵字",
+                text="➕ 綁定至 K 欄關鍵字",
                 height=29,
                 fg_color="#2F855A",
                 hover_color="#276749",
             )
-            btn_add_selected.pack(side="left")
+            btn_add_selected.pack(fill="x")
             picker_status = ctk.CTkLabel(
                 picker_actions,
                 text="請搜尋並選取資料庫項目",
-                font=(UI_FONT, 11), text_color="#A0AEC0", anchor="w",
+                font=(UI_FONT, 11), text_color="#A0AEC0", anchor="w", wraplength=300,
             )
-            picker_status.pack(side="left", fill="x", expand=True, padx=10)
+            picker_status.pack(fill="x", pady=(2, 0))
 
             list_header = ctk.CTkFrame(rules_panel, fg_color="transparent")
-            list_header.pack(fill="x", padx=12, pady=(10, 3))
+            list_header.grid(row=0, column=0, sticky="ew", padx=12, pady=(10, 3))
             ctk.CTkLabel(
                 list_header, text="📌 已對應項目", font=(UI_FONT, 13, "bold"), text_color="#90CDF4"
             ).pack(side="left", padx=(0, 8))
@@ -1357,13 +1378,16 @@ class SettingsMixin:
             list_count.pack(side="left")
             # 不使用 Treeview：它收合節點後仍保留原本的白色視窗高度。
             # 改以原生深色群組面板，讓收合後的內容區確實縮小。
+            rules_viewport = ctk.CTkFrame(rules_panel, fg_color="transparent", height=1)
+            rules_viewport.grid(row=1, column=0, sticky="nsew", padx=12, pady=(0, 6))
+            rules_viewport.pack_propagate(False)
             list_frame = ctk.CTkScrollableFrame(
-                rules_panel,
+                rules_viewport,
                 fg_color="#1E1E1E",
                 corner_radius=6,
                 height=220,
             )
-            list_frame.pack(fill="x", padx=12, pady=(0, 6))
+            list_frame.pack(fill="x")
             rule_selection_vars = {}
             collapsed_keyword_groups = set()
             catalog_by_key = {formula_rule_key(item): item for item in get_formula_catalog_items() if formula_rule_key(item)}
@@ -1371,13 +1395,24 @@ class SettingsMixin:
             def selected_rule_items():
                 return [item for item, var in rule_selection_vars.items() if var.get()]
 
+            visible_rule_height = {"height": 44}
+
+            def fit_rule_height(event=None):
+                available = rules_viewport._reverse_widget_scaling(rules_viewport.winfo_height())
+                height = max(1, min(visible_rule_height["height"], available - 12))
+                if list_frame.cget("height") != height:
+                    list_frame.configure(height=height)
+
+            rules_viewport.bind("<Configure>", fit_rule_height)
+
             def update_list_height(grouped_rules):
                 """群組收合後同步縮短右側內容區，避免形成清單內的大塊空白。"""
                 visible_rows = len(grouped_rules)
                 for keywords, items in grouped_rules.items():
                     if keywords not in collapsed_keyword_groups:
                         visible_rows += len(items)
-                list_frame.configure(height=max(44, min(390, visible_rows * 29 + 8)))
+                visible_rule_height["height"] = max(44, min(390, visible_rows * 29 + 8))
+                fit_rule_height()
 
             def toggle_keyword_group(keywords):
                 if keywords in collapsed_keyword_groups:
@@ -1436,7 +1471,7 @@ class SettingsMixin:
                         rule_checkbox.pack(anchor="w", fill="x", padx=8, pady=1)
 
                 list_count.configure(
-                    text=f"{len(rules)} 個項目／{len(grouped_rules)} 組關鍵字（點標題可收合）"
+                    text=f"{len(rules)} 項／{len(grouped_rules)} 組（點擊收合）"
                 )
                 update_list_height(grouped_rules)
 
@@ -1620,7 +1655,7 @@ class SettingsMixin:
             refresh_list()
 
             rule_actions = ctk.CTkFrame(rules_panel, fg_color="transparent")
-            rule_actions.pack(fill="x", padx=12, pady=(0, 10))
+            rule_actions.grid(row=2, column=0, sticky="ew", padx=12, pady=(0, 10))
             ctk.CTkButton(
                 rule_actions, text="💾 更新選取規則", font=(UI_FONT, 12, "bold"),
                 fg_color="#2B6CB0", hover_color="#2C5282", command=update_selected_rule,
@@ -1691,9 +1726,7 @@ class SettingsMixin:
         if not self.app_settings.get("show_announcement", False): return
         
         text = self.base_marquee_text
-        self.marquee_offset = (self.中_offset + 1) if hasattr(self, '中_offset') else (self.marquee_offset + 1)
-        self.marquee_offset = self.marquee_offset % len(text)
-        self.中_offset = self.marquee_offset
+        self.marquee_offset = (self.marquee_offset + 1) % len(text)
         
         display_str = text[self.marquee_offset:] + text[:self.marquee_offset]
         

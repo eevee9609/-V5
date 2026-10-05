@@ -603,6 +603,10 @@ class TemplateTabsMixin:
                             
                 self.update_preview_pub()
                 self.update_preview_self()
+                if hasattr(self, "lbl_loaded_preset"):
+                    self.lbl_loaded_preset.configure(
+                        text=f"📄 已載入預設組合：{os.path.basename(file_path)}"
+                    )
                 messagebox.showinfo("成功", "✅ 設定檔載入成功！項目已自動「疊加」至當前清單中。")
             except Exception as e: messagebox.showerror("錯誤", "讀取失敗：" + str(e))
 
@@ -743,8 +747,7 @@ class TemplateTabsMixin:
             force_to_bo = parse_routing_rules(inst_data.get("force_to_boren"))
             top_tag_row = max(1, base_header_row - 3)
             forced_destinations = {}
-            matched_xing_rules = set()
-            matched_bo_rules = set()
+            routing_changes = []
             routing_conflicts = []
 
             # 先為每一個動態欄建立唯一的路由結果，後面產生兩份檔案時共用，
@@ -758,38 +761,35 @@ class TemplateTabsMixin:
                     force_to_xing, force_to_bo, routing_values
                 )
 
-                if destination == "xing" and bo_rule:
+                if destination:
                     forced_destinations[c] = destination
-                    matched_xing_rules.add(xing_rule)
-                    matched_bo_rules.add(bo_rule)
+                    # 依本次來源表頭推算原分檔結果；只有實際改變去向才列入告知。
+                    # 未標明單一院所的欄位可能原本進入兩份檔案，E／9 則兩邊均略過。
+                    original_destinations = []
+                    col_tag = routing_values["org_tag"]
+                    if col_tag not in ["博1", "博2", "E", "9"]:
+                        original_destinations.append("xing")
+                    if col_tag not in ["杏1", "杏2", "E", "9"]:
+                        original_destinations.append("boren")
+                    if original_destinations != [destination]:
+                        destination_names = {"xing": "杏聯", "boren": "博仁"}
+                        previous = "、".join(destination_names[value] for value in original_destinations) or "不分派"
+                        item = routing_values["system_code"] or routing_values["english_code"] or routing_values["item_name"]
+                        routing_changes.append(
+                            f"{get_column_letter(c)} 欄 {item}：{previous} → {destination_names[destination]}"
+                        )
+
+                if destination == "xing" and bo_rule:
                     routing_conflicts.append(
                         f"第 {c} 欄（{routing_values['system_code'] or routing_values['english_code'] or routing_values['item_name']}）："
                         f"杏聯「{xing_rule}」優先於博仁「{bo_rule}」"
                     )
-                elif destination == "xing":
-                    forced_destinations[c] = destination
-                    matched_xing_rules.add(xing_rule)
-                elif destination == "boren":
-                    forced_destinations[c] = destination
-                    matched_bo_rules.add(bo_rule)
-
-            unmatched_rules = [
-                *(f"杏聯：{rule}" for rule in force_to_xing if rule not in matched_xing_rules),
-                *(f"博仁：{rule}" for rule in force_to_bo if rule not in matched_bo_rules),
-            ]
             if routing_conflicts:
                 messagebox.showwarning(
                     "分派規則衝突",
                     f"院所 {current_inst_code} 的規則同時命中同一欄，已依杏聯優先處理：\n\n"
                     + "\n".join(routing_conflicts[:10])
                     + ("\n…" if len(routing_conflicts) > 10 else ""),
-                )
-            if unmatched_rules:
-                messagebox.showwarning(
-                    "部分分派規則未命中",
-                    "以下規則沒有在本次大表的項目欄位中找到對應資料，因此未套用：\n\n"
-                    + "\n".join(unmatched_rules)
-                    + "\n\n可輸入完整系統代碼，或至少兩個字元的英文簡寫／項目名稱片段。",
                 )
 
             bo_keep_cols = list(range(1, dynamic_start_col))
@@ -946,7 +946,18 @@ class TemplateTabsMixin:
             wb_src_val.close()
             wb_src_fml.close()
 
-            messagebox.showinfo("拆分成功", "🎉 完美連動！已成功依據動態座標拆分為兩個無公式的純值實體檔案：\n\n1. " + os.path.basename(out_bo) + "\n2. " + os.path.basename(out_xing))
+            success_message = (
+                "🎉 已成功拆分為兩個無公式的純值檔案：\n\n1. "
+                + os.path.basename(out_bo) + "\n2. " + os.path.basename(out_xing)
+            )
+            if routing_changes:
+                success_message += (
+                    f"\n\n院所 {current_inst_code} 已強制變更分派 {len(routing_changes)} 項：\n"
+                    + "\n".join(routing_changes[:10])
+                )
+                if len(routing_changes) > 10:
+                    success_message += f"\n另有 {len(routing_changes) - 10} 項。"
+            messagebox.showinfo("拆分成功", success_message)
         except Exception as e:
             error_details = traceback.format_exc()
             messagebox.showerror("執行錯誤", "拆分過程發生阻礙，錯誤代碼如下：\n\n" + error_details)

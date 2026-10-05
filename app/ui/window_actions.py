@@ -24,6 +24,7 @@ from app.data import (
     save_institution_database,
 )
 from app.ui.assistant_tool import SmartAssistantTool
+from app.ui.layout import size_settings_window
 from app.ui.tab_names import TAB_PUBLIC, TAB_SELF_PAID, TAB_SPLIT
 
 
@@ -69,7 +70,7 @@ class WindowActionsMixin:
             f"・公費排定項目：{public_count} 項\n"
             f"・自費排定項目：{self_paid_count} 項\n"
             f"・已匯入受檢者：{roster_count} 人\n\n"
-            "院所資料、快捷按鈕與系統設定會保留。\n"
+            "啟用OB會取消勾選；院所資料、快捷按鈕與系統設定會保留。\n"
             "確定要繼續嗎？"
         )
         if not messagebox.askyesno("初始化下一場", message, default="no", parent=self):
@@ -79,6 +80,8 @@ class WindowActionsMixin:
         self.self_paid_config.clear()
         self.parsed_roster_data.clear()
         self.roster_checkbox_vars.clear()
+        if hasattr(self, "enable_ob_var"):
+            self.enable_ob_var.set(False)
 
         if hasattr(self, "listbox_preview_pub"):
             self.update_preview_pub()
@@ -109,6 +112,8 @@ class WindowActionsMixin:
                 assistant.selection_order.clear()
                 assistant.history_stack.clear()
                 assistant.last_write_result = None
+                if hasattr(assistant, "clear_last_write_history"):
+                    assistant.clear_last_write_history()
                 if hasattr(assistant, "undo_btn"):
                     assistant.undo_btn.configure(state="disabled")
                 if hasattr(assistant, "refresh_person_selector"):
@@ -382,10 +387,7 @@ class WindowActionsMixin:
 
         self.settings_window = ctk.CTkToplevel(self)
         self.settings_window.title("⚙️ 系統設定中心")
-        # 院所管理頁有左側設定欄與雙欄編輯區，使用主視窗展開後的尺寸，
-        # 才不會壓縮「新增快捷按鈕」的第 2 項目選單。
-        self.settings_window.geometry(f"{self.expanded_width}x{self.window_height}")
-        self.settings_window.minsize(self.normal_width, self.window_height)
+        size_settings_window(self.settings_window, self)
         self.settings_window.transient(self)
         self.settings_window.grab_set()
 
@@ -419,7 +421,7 @@ class WindowActionsMixin:
         self.btn_tab_special.grid(row=4, column=0, padx=15, pady=(0, 10), sticky="ew")
 
         self.settings_content_frame = ctk.CTkFrame(self.settings_window, fg_color="transparent")
-        self.settings_content_frame.grid(row=0, column=1, sticky="nswe", padx=25, pady=25)
+        self.settings_content_frame.grid(row=0, column=1, sticky="nswe", padx=14, pady=12)
 
         self.current_settings_tab_frame = None
         self.switch_settings_tab(default_tab)

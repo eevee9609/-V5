@@ -117,10 +117,6 @@ class HealthCheckGuiApp(
         self.opacity_label = ctk.CTkLabel(opacity_frame, text=self.format_opacity_label(self.current_alpha), font=self.default_font, text_color="#AAAAAA")
         self.opacity_label.pack(side="left")
         
-        self.lbl_announcement = ctk.CTkLabel(opacity_frame, text="", font=(UI_FONT, 14, "bold"), corner_radius=5)
-        self.lbl_announcement.pack(side="right", padx=(20, 0))
-        self.update_announcement_ui()
-
         self.inst_frame = ctk.CTkFrame(self.main_content_frame, fg_color="#3a1c1c", border_width=1, border_color="#aa3333")
         self.inst_frame.pack(fill="x", padx=20, pady=(0, 5))
         
@@ -136,6 +132,13 @@ class HealthCheckGuiApp(
             font=(UI_FONT, 14), dropdown_font=(UI_FONT, 14)
         )
         self.inst_combo.pack(side="left", padx=5)
+
+        self.enable_ob_var = tk.BooleanVar(master=self, value=False)
+        self.checkbox_enable_ob = ctk.CTkCheckBox(
+            self.inst_frame, text="啟用OB", variable=self.enable_ob_var,
+            font=self.default_font, width=95, checkbox_width=20, checkbox_height=20,
+        )
+        self.checkbox_enable_ob.pack(side="left", padx=(15, 5))
         
         if not existing_insts: self.inst_combo.set("")
         
@@ -154,16 +157,31 @@ class HealthCheckGuiApp(
             fg_color="#0275D8", hover_color="#025AA5", height=40, command=self.open_roster_window
         )
         self.btn_open_roster.pack(fill="x")
+        session_action_frame = ctk.CTkFrame(roster_action_frame, fg_color="transparent")
+        session_action_frame.pack(fill="x", pady=(5, 0))
+        # 系統公告固定顯示於「初始化」左側，讓主畫面作業時也能看見提醒。
+        self.lbl_announcement = ctk.CTkLabel(
+            session_action_frame,
+            text="",
+            width=210,
+            height=32,
+            anchor="w",
+            font=(UI_FONT, 14, "bold"),
+            corner_radius=5,
+        )
+        self.lbl_announcement.pack(side="left", padx=(0, 8), fill="x", expand=True)
         self.btn_reset_session = ctk.CTkButton(
-            roster_action_frame,
+            session_action_frame,
             text="初始化",
             font=(UI_FONT, 13, "bold"),
             fg_color="#C0392B",
             hover_color="#992D22",
+            width=78,
             height=32,
             command=self.reset_for_next_event,
         )
-        self.btn_reset_session.pack(fill="x", pady=(5, 0))
+        self.btn_reset_session.pack(side="right")
+        self.update_announcement_ui()
 
         self.lbl_roster_count = ctk.CTkLabel(top_frame, text="(目前尚未匯入名單)", font=(UI_FONT, 13, "bold"), text_color="#AAAAAA")
         self.lbl_roster_count.pack(side="right", padx=10)
@@ -210,6 +228,15 @@ class HealthCheckGuiApp(
             fg_color="#8E44AD", hover_color="#732D91", height=30, command=self.summon_panda
         )
         self.btn_summon_panda.pack(side="left")
+
+        self.lbl_loaded_preset = ctk.CTkLabel(
+            footer_frame,
+            text="",
+            anchor="w",
+            font=(UI_FONT, 12),
+            text_color="#5BC0DE",
+        )
+        self.lbl_loaded_preset.pack(side="left", fill="x", expand=True, padx=(12, 0))
         
         btn_settings = ctk.CTkButton(
             footer_frame, text="⚙️ 系統設定", width=80, font=(UI_FONT, 12, "bold"),

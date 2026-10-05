@@ -110,9 +110,8 @@ class SmartAssistantTool(ctk.CTkToplevel):
         self.selected_workbook_identity = None
         self.selected_sheet_name = None
         self.last_write_result = None
-        self.last_write_item_labels = []
-        self.last_write_marquee_index = 0
-        self.last_write_marquee_job = None
+        self.last_write_records = []
+        self.last_write_history_render_job = None
         self.template_validation = {"ok": False, "errors": ["尚未選擇 Excel 目標"], "warnings": []}
 
         self.item_vars = {}
@@ -251,59 +250,97 @@ class SmartAssistantTool(ctk.CTkToplevel):
             or str(item_name or "").strip()
         )
 
-    def _stop_last_write_marquee(self):
-        if self.last_write_marquee_job is not None:
+    def _format_last_write_record(self, record):
+        """以緊湊格式顯示一筆近期寫入，讓有限的高度容納更多紀錄。"""
+        person_text = str(record.get("person", "") or "最近寫入完成")
+        item_labels = record.get("items", [])
+        items_text = "、".join(item_labels) if item_labels else "（本次沒有可顯示的項目）"
+        return f"▸ {person_text}\n  {items_text}"
+
+    def _set_last_write_history_text(self, text):
+        if not hasattr(self, "last_write_history_box"):
+            return
+        self.last_write_history_box.configure(state="normal")
+        self.last_write_history_box.delete("1.0", tk.END)
+        self.last_write_history_box.insert("1.0", text)
+        self.last_write_history_box.configure(state="disabled")
+
+    def _last_write_display_line_count(self):
+        """取得文字實際換行後的行數；無法取得時使用保守估算。"""
+        try:
+            text_widget = getattr(self.last_write_history_box, "_textbox", self.last_write_history_box)
+            result = text_widget.count("1.0", "end-1c", "displaylines")
+            return int(result[0] if isinstance(result, (tuple, list)) else result)
+        except Exception:
+            return len(self.last_write_history_box.get("1.0", "end-1c").splitlines())
+
+    def _render_last_write_history(self):
+        """填滿可用區域後才淘汰最早紀錄，永遠保留最新一筆。"""
+        self.last_write_history_render_job = None
+        if not hasattr(self, "last_write_history_box"):
+            return
+
+        if not self.last_write_records:
+            self._set_last_write_history_text("尚未寫入任何項目")
+            return
+
+        while True:
+            text = "\n\n".join(
+                self._format_last_write_record(record)
+                for record in self.last_write_records
+            )
+            self._set_last_write_history_text(text)
             try:
-                self.after_cancel(self.last_write_marquee_job)
+                self.update_idletasks()
+                available_height = self.last_write_history_box.winfo_height()
+            except Exception:
+                return
+
+            # 視窗尚未完成配置時，保留所有紀錄並在稍後依實際高度重算。
+            if available_height < 40:
+                self._schedule_last_write_history_render(delay=120)
+                return
+
+            font_line_height = 19
+            available_lines = max(1, (available_height - 12) // font_line_height)
+            if (
+                self._last_write_display_line_count() <= available_lines
+                or len(self.last_write_records) == 1
+            ):
+                return
+            # 清單由新到舊排列；超出可視高度時移除最下方的最早紀錄。
+            self.last_write_records.pop()
+
+    def _schedule_last_write_history_render(self, event=None, delay=80):
+        if self.last_write_history_render_job is not None:
+            try:
+                self.after_cancel(self.last_write_history_render_job)
             except Exception:
                 pass
-            self.last_write_marquee_job = None
+        self.last_write_history_render_job = self.after(delay, self._render_last_write_history)
 
-    def _advance_last_write_marquee(self):
-        """多個項目時以三行為一頁，向上循環顯示最近寫入的內容。"""
-        if not hasattr(self, "last_write_items_label"):
-            return
-        labels = self.last_write_item_labels
-        if len(labels) <= 4:
-            return
-
-        visible_count = 3
-        start = self.last_write_marquee_index % len(labels)
-        visible = [labels[(start + offset) % len(labels)] for offset in range(visible_count)]
-        self.last_write_items_label.configure(text="\n".join(f"• {label}" for label in visible))
-        self.last_write_marquee_index = (start + 1) % len(labels)
-        self.last_write_marquee_job = self.after(1500, self._advance_last_write_marquee)
+    def clear_last_write_history(self):
+        """供主程式初始化下一場時清除本輪小熊貓操作紀錄。"""
+        self.last_write_records.clear()
+        self._schedule_last_write_history_render(delay=0)
 
     def _update_last_write_display(self, person, item_names):
-        """更新左側最近寫入紀錄；資料過多時自動上下循環。"""
-        if not hasattr(self, "last_write_person_label"):
+        """新增一筆紀錄；若空間不足，自動由最早的一筆開始淘汰。"""
+        if not hasattr(self, "last_write_history_box"):
             return
 
-        self._stop_last_write_marquee()
         person = person if isinstance(person, dict) else {}
         seq = str(person.get("seq", "") or "").strip()
         name = str(person.get("name", "") or "").strip()
-        self.last_write_person_label.configure(
-            text=f"最近寫入：{seq}｜{name}" if (seq or name) else "最近寫入完成"
-        )
-
-        self.last_write_item_labels = [
+        item_labels = [
             self._last_write_item_label(item_name)
             for item_name in item_names
             if str(item_name or "").strip()
         ]
-        self.last_write_marquee_index = 0
-        if not self.last_write_item_labels:
-            self.last_write_items_label.configure(text="（本次沒有可顯示的項目）")
-            return
-
-        if len(self.last_write_item_labels) <= 4:
-            self.last_write_items_label.configure(
-                text="\n".join(f"• {label}" for label in self.last_write_item_labels)
-            )
-            return
-
-        self._advance_last_write_marquee()
+        person_text = f"{seq}｜{name}" if (seq or name) else "最近寫入完成"
+        # 最新寫入固定排在最上方，方便連續作業時立即核對。
+        self.last_write_records.insert(0, {"person": person_text, "items": item_labels})
+        self._schedule_last_write_history_render(delay=0)
 
     def _find_default_workbook_display(self):
         """選出安全的預設活頁簿：優先含「團檢大表」，只有單一活頁簿才放寬。"""
@@ -1065,35 +1102,28 @@ class SmartAssistantTool(ctk.CTkToplevel):
         self.person_cb.set("— 請選擇受檢者 —")
         self.person_cb.bind("<<ComboboxSelected>>", lambda e: self.search_entry.focus_set())
 
-        # 將原本受檢者選單下方的留白改為最近寫入紀錄，方便核對上一筆操作。
+        # 將原本受檢者選單下方的留白改為近期寫入紀錄，方便連續核對操作。
         last_write_frame = ctk.CTkFrame(left_outer, corner_radius=8, fg_color="#1E2C3A")
         last_write_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=(14, 10))
         ctk.CTkLabel(
             last_write_frame,
-            text="🧾 上一步寫入紀錄",
+            text="🧾 寫入紀錄",
             font=(UI_FONT, 12, "bold"),
             text_color="#5BC0DE",
         ).pack(anchor="w", padx=9, pady=(9, 3))
-        self.last_write_person_label = ctk.CTkLabel(
+        self.last_write_history_box = ctk.CTkTextbox(
             last_write_frame,
-            text="尚未寫入任何項目",
             font=(UI_FONT, 11, "bold"),
-            text_color="#F6E05E",
-            anchor="w",
-            justify="left",
-            wraplength=165,
-        )
-        self.last_write_person_label.pack(fill=tk.X, padx=9, pady=(0, 5))
-        self.last_write_items_label = ctk.CTkLabel(
-            last_write_frame,
-            text="完成寫入後，這裡會顯示受檢者與項目。",
-            font=(UI_FONT, 11),
             text_color="#D9E2EC",
-            anchor="nw",
-            justify="left",
-            wraplength=165,
+            fg_color="#152231",
+            corner_radius=6,
+            wrap="word",
+            activate_scrollbars=False,
         )
-        self.last_write_items_label.pack(fill=tk.BOTH, expand=True, padx=9, pady=(0, 9))
+        self.last_write_history_box.pack(fill=tk.BOTH, expand=True, padx=9, pady=(0, 9))
+        self.last_write_history_box.configure(state="disabled")
+        self.last_write_history_box.bind("<Configure>", self._schedule_last_write_history_render)
+        self._schedule_last_write_history_render(delay=0)
 
         mid_outer = ctk.CTkFrame(main_frame, corner_radius=10, fg_color="#2B2B2B")
         mid_outer.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 6))
