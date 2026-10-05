@@ -4,7 +4,7 @@
         "remark": "HP(定性)__248  代號 :824\nHAV-IgM(定性)__143 代號 :6080\nOsteocalcin(博仁)代號:5572\n\n***尿液不要派***\nGlu已經有自帶了",
         "shortcuts": [
             {
-                "label": "宏仁xCBC_22",
+                "label": "宏仁xCBC_23",
                 "items": [
                     "[杏2] 003 - 白血球WBC (W.B.C(003))",
                     "[杏2] 004 - 紅血球RBC (RBC/M(004))",
@@ -27,7 +27,8 @@
                     "[杏2] 022 - 單核球數Mono# (MONO-C(022))",
                     "[杏2] 023 - 嗜酸性球數Eosin# (EOSI-C(023))",
                     "[杏2] 024 - 嗜鹼性球數Baso# (BASO-C(024)",
-                    "[杏2] 233 - PCT (PCT)"
+                    "[杏2] 233 - PCT (PCT)",
+                    "[杏2] 250 - RDW-SD (RDW-SD)"
                 ]
             },
             {
@@ -81,7 +82,9 @@
                     "[杏2] 233 - PCT (PCT)"
                 ]
             }
-        ]
+        ],
+        "force_to_xinglian": "",
+        "force_to_boren": "系統:225, 系統:284"
     },
     "H028-2": {
         "name": "元復(建八)(61~)",
@@ -120,12 +123,16 @@
                     "[杏2] 015 - 嗜鹼性球百分比Baso% (BASO%(015))"
                 ]
             }
-        ]
+        ],
+        "force_to_xinglian": "",
+        "force_to_boren": "系統:225, 系統:284"
     },
     "H028-3": {
         "name": "元復(陳德雄)(66)",
         "remark": "華，板，元 : HP(定量)__144  代號 :8244",
-        "shortcuts": []
+        "shortcuts": [],
+        "force_to_xinglian": "",
+        "force_to_boren": "系統:225, 系統:284"
     },
     "H102": {
         "name": "漢忠福葉(45)",
@@ -172,19 +179,9 @@
                     "[杏2] 034 - 尿膽紅素U-BIL (Bilirubin Urine)",
                     "[杏2] 032 - 尿糖U-Sugar (Urine Glucose)"
                 ]
-            },
-            {
-                "label": "Urine",
-                "items": [
-                    "[杏2] 031 - 尿蛋白(U-PRO) (Urine Protein)"
-                ]
-            },
-            {
-                "label": "test",
-                "items": [
-                    "[杏2] 283 - 彈性蛋白酶1(IRE) (IRE)"
-                ]
             }
-        ]
+        ],
+        "force_to_xinglian": "",
+        "force_to_boren": "系統:225, 系統:284"
     }
 }
