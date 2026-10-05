@@ -161,10 +161,30 @@ def _get_special_formula_triggers(app_settings: object, inst_code: object) -> di
     }
 
 
+def _get_item_special_keywords(db_item: dict, keyword_triggers: dict[str, list[str]]) -> list[str]:
+    """以完整項目識別資料取得關鍵字，不把系統代碼當成名稱片段搜尋。"""
+    # 設定頁優先保存 internal_code（系統代碼）；舊版規則也可能保存
+    # 英文簡碼或完整名稱。三者均須完全相同，110 不可命中名稱 GE110。
+    identities = {
+        str(db_item.get(field, "") or "").strip()
+        for field in ("internal_code", "sys_code", "full_name")
+    }
+    identities.discard("")
+    keywords = []
+    for key, words in keyword_triggers.items():
+        if str(key).strip() in identities:
+            for word in words:
+                if word not in keywords:
+                    keywords.append(word)
+    return keywords
+
+
 class ExcelGenerationMixin:
 
     def generate_excel(self):
-        if not self.public_items and not self.self_paid_config:
+        ob_var = getattr(self, "enable_ob_var", None)
+        enable_ob = bool(ob_var.get()) if ob_var is not None else False
+        if not self.public_items and not self.self_paid_config and not enable_ob:
             messagebox.showwarning("無法產生", "尚未排定任何公費或自費項目！")
             return
             
@@ -287,6 +307,17 @@ class ExcelGenerationMixin:
                 }
             ]
 
+            # OB 是本場可選的固定欄：啟用才放在 GLU、PC 後方（O 欄）。
+            # 未啟用時不保留空欄，後續公費／自費項目維持原本的位置。
+            if enable_ob:
+                fixed_columns.append({
+                    "org_display": "杏1",
+                    "row2": "",
+                    "internal_code": "054",
+                    "sys_code": "OB",
+                    "formula": lambda r: f'=IF(AND($H{r}<>0,ISNUMBER(FIND("2",$J{r}))),"@","")',
+                })
+
             for col_def in fixed_columns:
                 ws.cell(row=1, column=current_col_idx, value=col_def["org_display"]).fill = fill_row1
                 ws.cell(row=2, column=current_col_idx, value=col_def["row2"]).fill = fill_row2
@@ -363,19 +394,7 @@ class ExcelGenerationMixin:
 
                     col_letter = get_column_letter(current_col_idx)
                     
-                    extra_keywords = []
-                    for key, words in keyword_triggers.items():
-                        # 設定檔中的代碼一律以文字保存；資料庫舊資料偶爾可能是數字。
-                        # 統一轉文字後，可讓設定頁精準選取的系統代碼確實套用到公式。
-                        key_text = str(key).strip()
-                        sys_code = str(db_item.get("sys_code", "") or "").strip()
-                        internal_code = str(db_item.get("internal_code", "") or "").strip()
-                        if key_text and (
-                            key_text == sys_code
-                            or key_text == internal_code
-                            or key_text in full_name
-                        ):
-                            extra_keywords.extend(words)
+                    extra_keywords = _get_item_special_keywords(db_item, keyword_triggers)
 
                     for r in range(5, max_rows + 5):
                         find_list = []
