@@ -1,0 +1,6 @@
+customtkinter
+openpyxl
+pandas
+Pillow
+xlrd
+xlwings

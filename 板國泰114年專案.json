@@ -1,0 +1,676 @@
+{
+    "public_items": [
+        {
+            "item": "[杏2] 003 - 白血球WBC (W.B.C(003))",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 004 - 紅血球RBC (RBC/M(004))",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 005 - 血紅素HgB (HgB/M(Hb)(005))",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 006 - 血球容積比Hct (Hct/M(006))",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 007 - 紅血球平均體積值MCV (MCV(007))",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 008 - 紅血球平均血紅素MCH (MCH(008))",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 009 - 平均血色素濃度值MCHC (MCHC(009))",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 010 - 血小板Platelet (Pla[K](010))",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 011 - 嗜中性白血球百分比Neut% (NET-S%(011))",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 012 - 淋巴球百分比Lym% (LYM-L%(012))",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 013 - 單核球百分比Mono% (MONO%(013))",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 014 - 嗜酸性球百分比Eosin% (EOSIN%(014))",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 015 - 嗜鹼性球百分比Baso% (BASO%(015))",
+            "gender": "All"
+        },
+        {
+            "item": "[博2] 144 - 幽門螺旋桿菌(定量)HP (HP(定量))",
+            "gender": "All"
+        },
+        {
+            "item": "[博2] 095 - 草酸轉氨基酵素SGOT (GOT(AST))",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 096 - 丙酮轉氨基酵素SGPT (GPT(ALT))",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 108 - 肌酸酐(CRE) (Creatinine)",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 109 - 尿酸(UA) (Uric Acid)",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 111 - 總膽固醇(TC) (Cholesterol)",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 112 - 三酸甘油酯(TG) (Triglyceride)",
+            "gender": "All"
+        },
+        {
+            "item": "[博2] 113 - 高密度膽固醇(HDL) (HDL-C)",
+            "gender": "All"
+        },
+        {
+            "item": "[博2] 114 - 低密度膽固醇(LDL) (LDL-C)",
+            "gender": "All"
+        },
+        {
+            "item": "[博2] 116 - 動脈硬化指數(C/HDL) (Risk Factor(C/HDL))",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 028 - α-胎兒蛋白AFP (AFP(AU))",
+            "gender": "All"
+        },
+        {
+            "item": "[杏2] 002 - 大腸癌胚抗原CEA (CEA(AU))",
+            "gender": "All"
+        },
+        {
+            "item": "[博2] 145 - 消化系統癌症篩檢CA-199 (CA-199)",
+            "gender": "All"
+        },
+        {
+            "item": "[博2] 128 - 鈉Na (Na)",
+            "gender": "All"
+        },
+        {
+            "item": "[博2] 129 - 鉀K (K)",
+            "gender": "All"
+        },
+        {
+            "item": "[博2] 130 - 氯Cl (Cl)",
+            "gender": "All"
+        },
+        {
+            "item": "[杏1] 147 - 卵巢癌篩檢CA-125 (CA-125)",
+            "gender": "Female"
+        },
+        {
+            "item": "[博2] 150 - 睪丸癌β-HCG (B-HCG)",
+            "gender": "Male"
+        }
+    ],
+    "self_paid_config": {
+        "A": [
+            {
+                "item": "[博2] 240 - HAV-M(定量 (HAV-M) | 生化",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 029 - B型肝炎表面抗原HBsAg (HBsAg)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[杏2] 030 - B型肝炎表面抗體HBsAb (Anti-HBs)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 141 - C型肝炎抗體HCV-Ab (Anti-HCV)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[杏2] 102 - 丙種麩晞轉移酵素r-GT (GGT)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 097 - 鹼性磷酸脢ALK-P (Alk-P(ALP))",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 098 - 總蛋白T-P (Total protein(TP))",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[杏2] 099 - 白蛋白ALB (Albumin(ALB))",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 100 - 球蛋白GLO (Globulin(GLO))",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 101 - 白蛋白/球蛋白比值A/G (A/G Ratio)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 107 - 尿素氮(BUN) (BUN)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[杏2] 110 - 腎絲球過濾速率(eGFR) (eGFR)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 103 - 總膽紅素T-Bili (Total Bilirubin(TBIL))",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 104 - 直接膽紅素D-Bili (Direct Bilirubin(DBIL))",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 125 - 澱粉酵素(Amylase) (AMY)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "B": [
+            {
+                "item": "[博2] 152 - 肺癌篩檢NSE (NSE)",
+                "gender": "All",
+                "check_l_col": true,
+                "l_pkg": "B1"
+            },
+            {
+                "item": "[博2] 157 - 非小細胞肺癌標記Cyfra 21-1 (C21-1)",
+                "gender": "All",
+                "check_l_col": true,
+                "l_pkg": "B2"
+            },
+            {
+                "item": "[博2] 156 - 子宮頸癌SCC (SCC)",
+                "gender": "All",
+                "check_l_col": true,
+                "l_pkg": "B3"
+            },
+            {
+                "item": "[博2] 149 - 鼻咽癌篩檢(IgA)EBV-IgA (EBV-IgA)",
+                "gender": "Male",
+                "check_l_col": true,
+                "l_pkg": "B4"
+            },
+            {
+                "item": "[博2] 151 - 絨毛膜癌β-HCG (β-HCG(F))",
+                "gender": "Female",
+                "check_l_col": true,
+                "l_pkg": "B4"
+            },
+            {
+                "item": "[杏1] 146 - 攝護腺特異抗原PSA (TPSA(AU))",
+                "gender": "Male",
+                "check_l_col": true,
+                "l_pkg": "B5"
+            },
+            {
+                "item": "[博1] 148 - 乳癌篩檢CA-153 (CA-153)",
+                "gender": "Female",
+                "check_l_col": true,
+                "l_pkg": "B5"
+            }
+        ],
+        "C": [
+            {
+                "item": "[博2] 119 - 肌酸磷化酵素(CPK) (CPK)",
+                "gender": "All",
+                "check_l_col": true,
+                "l_pkg": "C1"
+            },
+            {
+                "item": "[博2] 118 - 乳酸脫氫酵素(LDH) (LDH)",
+                "gender": "All",
+                "check_l_col": true,
+                "l_pkg": "C1"
+            },
+            {
+                "item": "[博2] 121 - 高敏度CRP(hs-CRP) (HsCRP)",
+                "gender": "All",
+                "check_l_col": true,
+                "l_pkg": "C2"
+            },
+            {
+                "item": "[博2] 122 - C反應蛋白(CRP) (C-RP)",
+                "gender": "All",
+                "check_l_col": true,
+                "l_pkg": "C3"
+            },
+            {
+                "item": "[博2] 132 - 類風濕性關節因子RA (RA)",
+                "gender": "All",
+                "check_l_col": true,
+                "l_pkg": "C3"
+            }
+        ],
+        "D": [
+            {
+                "item": "[博2] 160 - 三碘甲狀腺素T3 (T-3)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[杏2] 161 - 四碘甲狀腺素T4 (T-4)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 162 - 甲狀腺刺激素TSH (TSH)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 126 - 血清鈣Ca (CA)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 127 - 血清磷P (P)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "E": [
+            {
+                "item": "[杏2] 138 - B型肝炎e抗原HBeAg (HBeAg)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[杏2] 235 - HBV-DNA (HBV-DNA)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "F": [
+            {
+                "item": "[杏2] 236 - HCV-RNA (HCV-RNA)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V1.": [
+            {
+                "item": "[博2] 237 - Anti-phospholipid Ab IgG(APS) (APS)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V2.": [
+            {
+                "item": "[杏2] 136 - 維他命B12 (Vitamin B12)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[杏2] 137 - 葉酸(Folic) (Folic)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 120 - 同半胱胺酸酵素(Homocysteine) (Homocy)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V3.": [
+            {
+                "item": "[博2] 242 - D-Dimer (D-Dimer)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V4.": [
+            {
+                "item": "[博2] 115 - 微低密度膽固醇 (VLDL Cholesterol)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V5.": [
+            {
+                "item": "[杏2] 196 - 維他命D3 (維他命D3)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V6.": [
+            {
+                "item": "[杏2] 249 - APOE (APOE)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V7.": [
+            {
+                "item": "[杏2] 025 - 醣化血色素HbA1c (HBA1c)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 190 - 胰島素INSULIN (Insuli)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 191 - 游離脂肪酸Free-Fat(HOMA) (HOMA-IR(胰島素阻抗))",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V8.": [
+            {
+                "item": "[杏2] 172 - 自體免疫ANA (ANA)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V9.": [
+            {
+                "item": "[博2] 158 - 膀胱癌TPA (TPA)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V10.": [
+            {
+                "item": "[杏2] 283 - 彈性蛋白酶1(IRE) (IRE)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V11.": [
+            {
+                "item": "[博2] 238 - 卵巢癌臨床診斷(HE4) (HE4)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V12.": [
+            {
+                "item": "[博2] 153 - 胃癌篩檢CA72-4 (CA72-4)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[杏2] 186 - C13尿素呼氣幽門桿菌檢查 (C13 urea breath H. pylori checks)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V13.": [
+            {
+                "item": "[杏2] 171 - 過敏原MAST(40種) (MAST)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V14.": [
+            {
+                "item": "[杏2] 199 - 過敏原檢查GE110 (MAST GE110)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V15.": [
+            {
+                "item": "[杏2] 201 - 過敏原檢查GE224 (MAST GE224)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V16.": [
+            {
+                "item": "[博2] 163 - 游離四碘甲狀腺素FreeT4 (FreeT4)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V17.": [
+            {
+                "item": "[博2] 195 - 甲狀腺球蛋白抗體ATA (Anti-Thyroglobulin Antibodies)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V18.": [
+            {
+                "item": "[博2] 239 - Calcitonin (CAL)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V19.": [
+            {
+                "item": "[博2] 187 - 甲狀腺球蛋白Thyrog (Thyroglobulin)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V20.": [
+            {
+                "item": "[杏2] 165 - 黃體素生成LH (LH)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[杏2] 164 - 濾泡刺激素FSH (FSH)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[杏2] 168 - 黃體素Progesterone (PGTR)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[杏2] 167 - 泌乳激素Prolactin (Prolat)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[杏2] 166 - 二氫基春情素E2 (E2)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V21.": [
+            {
+                "item": "[杏2] 202 - 抗穆勒氏賀爾蒙(Anti-Mullerian Hormone) (Anti-Mullerian hormo(AMH))",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V22.": [
+            {
+                "item": "[杏2] 234 - 鋅(Zn) (鋅(Zn))",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V23.": [
+            {
+                "item": "[杏2] 189 - 還原雄性素硫化物 DHEA-S (DHEA-S)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[杏2] 169 - 睪丸酮素Testostero (Testo)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[杏2] 168 - 黃體素Progesterone (PGTR)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V24.": [
+            {
+                "item": "[杏2] 178 - 德國麻疹Rb-IgG (Rubella IgG)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V25.": [
+            {
+                "item": "[杏2] 220 - 血色素電泳Hb-EP (Hb-EP)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V26.": [
+            {
+                "item": "[杏2] 180 - 血清鐵S-Iron (Serum Iron)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[杏2] 182 - 鐵蛋白Ferritin (Ferrit)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V27.": [
+            {
+                "item": "[杏2] 133 - 蠶豆症G-6-PD (G-6-PD)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "V28.": [
+            {
+                "item": "[博2] 175 - 愛滋病毒篩檢HIV (HIV)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[博2] 173 - 梅毒血清檢查RPR(STS) (RPR)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "傷": [
+            {
+                "item": "[博2] 183 - 傷寒檢測Widal (Widal)",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ],
+        "血型": [
+            {
+                "item": "[杏2] 026 - 血型BG (Blood Type(BG))",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            },
+            {
+                "item": "[杏2] 027 - 血型Rh type (Rh Type(RH))",
+                "gender": "All",
+                "check_l_col": false,
+                "l_pkg": ""
+            }
+        ]
+    }
+}
